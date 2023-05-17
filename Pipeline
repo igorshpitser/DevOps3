@@ -1,0 +1,22 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone') {
+            steps {
+                git 'https://github.com/igorshpitser/DevOps3.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    docker.withRegistry('https://your-docker-registry-url', 'docker-credentials-id') {
+                        def dockerImage = docker.build('your-docker-image-name', '-f Dockerfile .')
+                        dockerImage.push('latest')
+                    }
+                }
+            }
+        }
+    }
+}
